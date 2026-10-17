@@ -332,6 +332,15 @@ function menuImport() {
   if (r.getSelectedButton() !== ui.Button.OK) return;
   var url = r.getResponseText().trim() || st['活動網址'];
   if (r.getResponseText().trim()) setSetting_('活動網址', url);
+  ui.alert(importProducts_(url));
+}
+
+/** 不跳對話框的匯入（可在 Apps Script 編輯器直接執行，結果看執行記錄） */
+function runImport() {
+  Logger.log(importProducts_(settings_()['活動網址']));
+}
+
+function importProducts_(url) {
   var products = fetchCampaign(url), rows = [];
   products.forEach(function (p) {
     p.variants.forEach(function (v) {
@@ -345,7 +354,7 @@ function menuImport() {
   var sh = sheet_(SHEETS.products);
   if (rows.length) checkbox_(sh.getRange(2, 8, rows.length, 2));
   var skipped = products.filter(function (p) { return !p.eligible; }).map(function (p) { return p.name; });
-  ui.alert('匯入 ' + products.length + ' 款商品（' + rows.length + ' 列）。' +
+  return ('匯入 ' + products.length + ' 款商品（' + rows.length + ' 列）。' +
     (skipped.length ? '\n\n以下不參加買5送1，已預設不開放：\n' + skipped.join('\n') : '') +
     '\n\n可在「商品」表取消勾選「開放」來隱藏款式；截單後才缺貨請勾選「缺貨」再重新結算。');
 }
