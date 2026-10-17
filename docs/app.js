@@ -122,7 +122,6 @@
       $('stat-total').textContent = b ? b.bras + ' 件' : '-';
       $('stat-unit').textContent = money(S.round.unit);
       $('stat-gap').textContent = b ? money(b.total) : '-';
-      $('tip').textContent = '';
       return;
     }
     labels[0].textContent = '已湊到'; labels[1].textContent = '目前單價'; labels[2].textContent = '湊滿 6 件';
@@ -130,8 +129,6 @@
     $('stat-total').textContent = t + ' 件';
     $('stat-unit').textContent = money(e.unit);
     $('stat-gap').textContent = e.gap ? '差 ' + e.gap + ' 件' : '已湊滿';
-    $('tip').textContent = (e.gap ? '差 ' + e.gap + ' 件湊滿 ' + e.filled + ' 件（截單時由團主補齊），單價以 ' + e.filled + ' 件計' : '已湊滿 ' + t + ' 件') +
-      (e.better ? '｜湊到 ' + e.better.total + ' 件可降到 ' + money(e.better.unit) : '');
   }
 
   function optHtml(k) {

@@ -24,8 +24,6 @@ input, textarea { font: inherit; width: 100%; border: 1px solid var(--line); bor
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; margin-top: 8px; }
 .stats small { display: block; font-size: 11px; opacity: .8; }
 .stats b { font-size: 20px; font-weight: 500; }
-.tip { font-size: 12px; margin-top: 6px; background: var(--brand-2); border-radius: 8px; padding: 5px 8px; }
-.tip:empty { display: none; }
 #demo-bar { background: #FAEEDA; color: #633806; font-size: 12px; padding: 6px 12px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 #demo-bar button { padding: 2px 8px; font-size: 12px; }
 .loading, .empty { text-align: center; color: var(--muted); padding: 40px 0; }
