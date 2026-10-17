@@ -109,10 +109,12 @@ function pricingCfg_(st) {
   });
 }
 
+function isDate_(v) { return Object.prototype.toString.call(v) === '[object Date]'; }
+
 function isOpen_(st) {
   if (st['狀態'] !== '開放點單') return false;
   var d = st['截止時間'];
-  return !(d instanceof Date) || new Date() < d;
+  return !isDate_(d) || new Date() < d;
 }
 
 // ---------- Web API ----------
@@ -186,7 +188,7 @@ function apiState_(req, user) {
     user: user,
     isOrganizer: user.userId === st['團主 LINE userId'],
     round: {
-      name: st['團名'], deadline: st['截止時間'] instanceof Date ? st['截止時間'].toISOString() : '',
+      name: st['團名'], deadline: isDate_(st['截止時間']) ? st['截止時間'].toISOString() : '',
       status: settled ? 'settled' : (isOpen_(st) ? 'open' : 'closed'),
       progress: st['進度'] || '', payDeadline: st['付款期限'] || '',
       unit: settled ? Number(st['最終單價']) : null
@@ -304,6 +306,17 @@ function menuSetup() {
   var sh = sheet_(SHEETS.settings), existing = settings_();
   if (sh.getLastRow() === 0) sh.appendRow(['項目', '值', '說明']);
   SETTINGS.forEach(function (r) { if (!(r[0] in existing)) sh.appendRow(r); });
+  // 「10:400,30:380」這類值會被試算表自動轉成時間，文字類設定一律設為純文字格式
+  var values = sh.getDataRange().getValues();
+  SETTINGS.forEach(function (r) {
+    if (typeof r[1] !== 'string' || r[0] === '截止時間') return;
+    for (var i = 0; i < values.length; i++) {
+      if (values[i][0] !== r[0]) continue;
+      var cell = sh.getRange(i + 1, 2), v = values[i][1];
+      cell.setNumberFormat('@');
+      if (isDate_(v) || (v === '' && r[1] !== '')) cell.setValue(r[1]);
+    }
+  });
   sh.getRange(1, 1, 1, 3).setFontWeight('bold');
   sh.setColumnWidth(1, 170); sh.setColumnWidth(2, 320); sh.setColumnWidth(3, 360);
   ['商品', '團員', '明細', '抽獎'].forEach(sheet_);

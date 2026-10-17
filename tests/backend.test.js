@@ -116,6 +116,14 @@ test('截單後才缺貨：移除品項並記錄受影響團員', () => {
   assert.strictEqual(m['內褲件數'], 2);
 });
 
+test('團購級距被試算表轉成時間時，重跑初始化會修復', () => {
+  const g = setup();
+  g.setSetting_('團購級距', new Date());
+  g.menuSetup();
+  assert.strictEqual(g.settings_()['團購級距'], '10:400,30:380');
+  assert.strictEqual(Math.round(g.pricingCfg_(g.settings_()).tiers[1].price), 380);
+});
+
 test('勾選已付款後重新寫入不會被清掉', () => {
   const g = setup();
   g.post({ action: 'submit', idToken: 't1', pickup: 'face', items: [{ type: 'bra', key: 'A', variant: '黑', qty: 6 }] });

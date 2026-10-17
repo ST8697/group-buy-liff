@@ -19,7 +19,7 @@ function makeSheet(name, book) {
         setValues(v) { ensure(r + nr - 1, c + nc - 1); v.forEach((row, i) => row.forEach((x, j) => { data[r - 1 + i][c - 1 + j] = x; })); return this; },
         setValue(x) { ensure(r, c); data[r - 1][c - 1] = x; return this; },
         clearContent() { ensure(r + nr - 1, c + nc - 1); for (let i = 0; i < nr; i++) for (let j = 0; j < nc; j++) data[r - 1 + i][c - 1 + j] = ''; return this; },
-        setFontWeight() { return this; }, setBackground() { return this; }, setDataValidation() { return this; }
+        setFontWeight() { return this; }, setBackground() { return this; }, setDataValidation() { return this; }, setNumberFormat() { return this; }
       };
     },
     appendRow(row) { data.push(row.slice()); },
