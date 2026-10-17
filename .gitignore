@@ -1,0 +1,5 @@
+node_modules/
+*.html.tmp
+p.html
+c.html
+.DS_Store

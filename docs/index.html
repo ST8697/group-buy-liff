@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>內衣團購點單</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="top">
+      <div class="top-row"><span id="round-name">載入中…</span><span id="countdown"></span></div>
+      <div class="stats">
+        <div><small>已湊到</small><b id="stat-total">-</b></div>
+        <div><small>目前單價</small><b id="stat-unit">-</b></div>
+        <div><small>湊滿 6 件</small><b id="stat-gap">-</b></div>
+      </div>
+      <div class="tip" id="tip"></div>
+    </header>
+    <div id="demo-bar" hidden></div>
+    <main id="main"><p class="loading">載入中…</p></main>
+    <footer id="bar" hidden></footer>
+  </div>
+  <div id="toast" role="status" hidden></div>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="config.js"></script>
+  <script src="pricing.js"></script>
+  <script src="mock.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
