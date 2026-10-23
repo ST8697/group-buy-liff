@@ -88,6 +88,7 @@ https://script.google.com/macros/s/AKfycbwGLeJDxOdIcXsGQJJqkffLjoBy01OXCTUDbollR
 
 - **修改 Apps Script 程式碼後一定要發布新版本**：部署 → 管理部署作業 → 編輯（鉛筆）→ 版本選「新版本」→ 部署，網址才不會變
 - `docs/pricing.js` 同時是 Apps Script 的 `Pricing.gs`，修改後兩邊都要更新
+- 修改 `docs/` 的 JS/CSS 後，把 `index.html` 裡的 `?v=` 版本號加 1，否則手機 LINE 會沿用快取（最多 10 分鐘）
 - Claude 桌面版的內建瀏覽器會擋掉 Google 的彈出視窗（例如授權、Apps Script 開新分頁）。授權改在 Apps Script 編輯器按「執行」完成；或改用自己電腦的 Chrome
 - 內建瀏覽器窗格太窄時，試算表的「🛒 團購」選單會被收起來。需要時可以在 Apps Script 編輯器直接執行 `runImport` 匯入商品
 - 第一次實際結帳時，核對官網結帳金額和「官網購物車清單」的預估金額；只有 6 的倍數件數的價格經過官方價目表驗證
