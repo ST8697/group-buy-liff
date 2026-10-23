@@ -77,6 +77,8 @@ https://script.google.com/macros/s/AKfycbwGLeJDxOdIcXsGQJJqkffLjoBy01OXCTUDbollR
 
 ## 五、注意事項（踩過的坑）
 
+- **重新匯入官網商品會把「開放」重設回預設值**（只動「商品」表，不影響「團員」「明細」）。2026/10/23 重新匯入後，手動關掉了 4 個預購款（經典款黑/細肩帶 PLUS++、前扣款黑 S/M/L）；下次重匯入後要再關一次
+
 - **從 LINE 社群（OpenChat）開啟 LIFF 拿不到 ID token**（頁面顯示「請從 LINE 開啟點單頁」）。已改成拿不到時送 access token，後端用 `verifyAccessToken_` 驗證 client_id 再取個人資料；Apps Script 已發布版本 2
 
 - **修改 Apps Script 程式碼後一定要發布新版本**：部署 → 管理部署作業 → 編輯（鉛筆）→ 版本選「新版本」→ 部署，網址才不會變
