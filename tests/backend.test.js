@@ -133,3 +133,13 @@ test('勾選已付款後重新寫入不會被清掉', () => {
   g.menuSettle();
   assert.strictEqual(g.readTable_('團員')[0]['已付款'], true);
 });
+
+test('LINE 社群拿不到 ID token 時改用 access token', () => {
+  const g = setup();
+  const s = g.post({ action: 'state', idToken: '', accessToken: 't2' });
+  assert.ok(s.ok, s.error);
+  assert.strictEqual(s.user.userId, 'U2');
+  assert.strictEqual(s.user.name, 'Amy');
+  assert.match(g.post({ action: 'state', accessToken: 'bad' }).error, /登入/);
+  assert.match(g.post({ action: 'state' }).error, /從 LINE 開啟/);
+});

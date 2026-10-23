@@ -12,7 +12,7 @@
   var S = null;            // 伺服器狀態
   var cart = {};           // id -> {type,key,parent,variant,qty}
   var pickup = '', note = '';
-  var openKey = null, sheetOpen = false, err = '', busy = false, idToken = '';
+  var openKey = null, sheetOpen = false, err = '', busy = false, idToken = '', accessToken = '';
 
   var $ = function (id) { return document.getElementById(id); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
@@ -26,6 +26,7 @@
     if (DEMO) return MockApi.call(action, body);
     body.action = action;
     body.idToken = idToken;
+    body.accessToken = accessToken;
     return fetch(CONFIG.API_URL, { method: 'POST', body: JSON.stringify(body) })
       .then(function (r) { return r.json(); })
       .catch(function () { return { ok: false, error: '連線失敗，請稍後再試' }; });
@@ -36,7 +37,13 @@
     if (!window.liff) return fatal('LINE 元件載入失敗，請重新開啟');
     liff.init({ liffId: CONFIG.LIFF_ID }).then(function () {
       if (!liff.isLoggedIn()) { liff.login({ redirectUri: location.href }); return; }
-      idToken = liff.getIDToken();
+      // LINE 社群（OpenChat）裡可能拿不到 ID token，改用 access token 由後端驗證
+      idToken = liff.getIDToken() || '';
+      accessToken = liff.getAccessToken() || '';
+      if (!idToken && !accessToken) {
+        var ctx = liff.getContext() || {};
+        return fatal('無法取得 LINE 登入資訊，請截圖給團主（' + (ctx.type || '?') + '／' + liff.getOS() + '／' + liff.getLineVersion() + '）');
+      }
       return refresh();
     }).catch(function (e) { fatal('LINE 初始化失敗：' + e.message); });
   }

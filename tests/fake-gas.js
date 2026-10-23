@@ -64,6 +64,14 @@ function load(opts = {}) {
     },
     UrlFetchApp: {
       fetch(url, o) {
+        if (url.includes('verify?access_token=')) {
+          const ok = !!users[decodeURIComponent(url.split('=')[1])];
+          return { getResponseCode: () => (ok ? 200 : 400), getContentText: () => JSON.stringify({ client_id: '123', expires_in: 3600 }) };
+        }
+        if (url.includes('/v2/profile')) {
+          const u = users[o.headers.Authorization.slice(7)];
+          return { getResponseCode: () => (u ? 200 : 401), getContentText: () => JSON.stringify(u ? { userId: u.userId, displayName: u.name } : {}) };
+        }
         if (url.includes('api.line.me')) {
           const u = users[o.payload.id_token];
           return { getResponseCode: () => (u ? 200 : 400), getContentText: () => JSON.stringify(u ? { sub: u.userId, name: u.name } : {}) };

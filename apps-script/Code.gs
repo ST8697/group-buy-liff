@@ -126,7 +126,7 @@ function doGet() {
 function doPost(e) {
   try {
     var req = JSON.parse(e.postData.contents);
-    var user = verifyUser_(req.idToken);
+    var user = req.idToken ? verifyUser_(req.idToken) : verifyAccessToken_(req.accessToken);
     var handlers = { state: apiState_, submit: apiSubmit_, report: apiReport_ };
     if (!handlers[req.action]) throw new Error('未知的動作');
     return json_(handlers[req.action](req, user));
@@ -154,6 +154,27 @@ function verifyUser_(idToken) {
   if (res.getResponseCode() !== 200) throw new Error('登入已過期，請重新開啟點單頁');
   var body = JSON.parse(res.getContentText());
   var user = { userId: body.sub, name: body.name || 'LINE 使用者' };
+  cache.put(hash, JSON.stringify(user), 600);
+  return user;
+}
+
+/** LINE 社群（OpenChat）拿不到 ID token 時改用 access token：確認是本 Channel 發的，再取個人資料 */
+function verifyAccessToken_(accessToken) {
+  if (!accessToken) throw new Error('請從 LINE 開啟點單頁');
+  var cache = CacheService.getScriptCache();
+  var hash = Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, 'at:' + accessToken));
+  var hit = cache.get(hash);
+  if (hit) return JSON.parse(hit);
+  var channelId = String(settings_()['LINE Login Channel ID'] || '').trim();
+  if (!channelId) throw new Error('團主尚未設定 LINE Login Channel ID');
+  var res = UrlFetchApp.fetch('https://api.line.me/oauth2/v2.1/verify?access_token=' + encodeURIComponent(accessToken), { muteHttpExceptions: true });
+  if (res.getResponseCode() !== 200) throw new Error('登入已過期，請重新開啟點單頁');
+  var info = JSON.parse(res.getContentText());
+  if (String(info.client_id) !== channelId || !(info.expires_in > 0)) throw new Error('登入已過期，請重新開啟點單頁');
+  var prof = UrlFetchApp.fetch('https://api.line.me/v2/profile', { headers: { Authorization: 'Bearer ' + accessToken }, muteHttpExceptions: true });
+  if (prof.getResponseCode() !== 200) throw new Error('無法取得 LINE 個人資料（' + prof.getResponseCode() + '），請截圖給團主');
+  var body = JSON.parse(prof.getContentText());
+  var user = { userId: body.userId, name: body.displayName || 'LINE 使用者' };
   cache.put(hash, JSON.stringify(user), 600);
   return user;
 }
