@@ -62,27 +62,19 @@ https://script.google.com/macros/s/AKfycbwGLeJDxOdIcXsGQJJqkffLjoBy01OXCTUDbollR
 
 ## 四、接下來要做的事
 
-### 第 4 步：LINE Developers（需要你登入 LINE）
-1. https://developers.line.biz/console/ 登入 → 建立 Provider（例如「團購」）
-2. Provider 底下 **Create a new channel → LINE Login**，App types 勾 **Web app**
-3. 記下 **Basic settings → Channel ID**
-4. **LIFF** 分頁 → Add：
-   - Size：**Full**
-   - Endpoint URL：`https://st8697.github.io/group-buy-liff/`
-   - Scopes：**openid**、**profile**
-   - Bot link feature：Off
-5. 記下 **LIFF ID** 和 **LIFF URL**
-6. ⚠️ Channel 狀態從 **Developing 改成 Published**，不然只有你能登入
+**本團設定**（試算表「設定」）：團名「雙11金秋狂購節」、截止 2026/10/24 15:00、付款期限「待通知」，轉帳資訊已填（不放進 repo）。
 
-### 第 5 步：填設定
-- `docs/config.js`：`LIFF_ID` 填 LIFF ID、`API_URL` 填上面的 /exec 網址 → commit、push（約 1 分鐘後 Pages 更新）
-- 試算表「設定」工作表：LIFF 網址、LINE Login Channel ID、轉帳資訊、賣貨便連結、截止時間（日期格式）、付款期限
+### 第 6 步：賣貨便 $1 賣場（唯一剩下的部署步驟）
+1. 建立固定賣場，只放一個「團購結帳」**$1** 商品，庫存設大（例如 9999）
+2. 自己試下單，確認數量欄能不能填到 **3,000 以上**；有上限的話要改做法
+3. 賣場網址填到試算表「設定 → 賣貨便連結」
 
-### 第 6 步：賣貨便
-- 建立固定賣場，只放一個「團購結帳」**$1** 商品；先試下單，確認數量能不能填到 3,000 以上
+### 正式開團前
+- 在點單頁按「取消我的訂單」刪掉團主的測試單（內衣 12、內褲 1），否則會算進總件數
+- 把 LIFF 網址 https://liff.line.me/2012162599-VWFBR1hI 貼到 LINE 群組
 
-### 第 7 步：試跑
-- 手機 LINE 打開 LIFF 網址點一筆單 → 到「團員」工作表複製自己的 LINE userId → 填到「設定 → 團主 LINE userId」
+### 待辦（非緊急）
+- Apps Script 的 `Pricing.gs` 還是舊版（點單頁單價改版前）。目前後端沒用到 `estimate`，所以結算不受影響；下次改 Apps Script 時順便把 `docs/pricing.js` 整份貼過去並發布新版本
 
 ## 五、注意事項（踩過的坑）
 
@@ -103,4 +95,4 @@ node --test tests/*.test.js
 
 開一個新的 Claude 對話，把資料夾設成 `group-buy-liff`，然後說：
 
-> 請先讀 PROGRESS.md 和 README.md，我們要從「第 4 步：LINE Developers 建立 LIFF」繼續部署。
+> 請先讀 PROGRESS.md 和 README.md，我們要從「第 6 步：賣貨便 $1 賣場」繼續部署。
