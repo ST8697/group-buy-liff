@@ -43,7 +43,7 @@
 | 2. Google 試算表＋Apps Script | ✅ | 個人 Gmail 帳號下的試算表「**內衣團購**」；Apps Script 專案「內衣團購」有 4 個檔案：`程式碼.gs`、`Pricing.gs`、`Import.gs`、`appsscript.json`；已授權、已初始化 |
 | 匯入官網商品 | ✅ | 194 列（內衣 138、內褲 56），青春期款 6 列預設不開放。Google 伺服器抓官網**沒有被擋** |
 | 3. 部署網頁應用程式 | ✅ | 版本 1，執行身分「我」、存取權「所有人」。API 測試正常，GitHub Pages 跨網域呼叫也正常 |
-| 4. LINE Developers 建 LIFF | ✅ | Provider「團購」→ LINE Login channel「內衣團購點單」→ LIFF（Full、openid＋profile、Bot link Off）。⚠️ Channel 尚未改成 Published |
+| 4. LINE Developers 建 LIFF | ✅ | Provider「團購」→ LINE Login channel「內衣團購點單」→ LIFF（Full、openid＋profile、Bot link Off），Channel 已 Published |
 | 5. 填 config.js 和試算表設定 | ⏳ | `docs/config.js` 已填；試算表「設定」待填 |
 | 6. 賣貨便 $1 賣場 | ⬜ | |
 | 7. 手機試點一筆＋設定團主 userId | ⬜ | |
