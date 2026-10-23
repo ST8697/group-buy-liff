@@ -5,7 +5,7 @@
 
   var FLOW = {
     face: { title: '面交', icon: '🤝', steps: ['截單後在此頁看到應付金額', '依頁面上的轉帳資訊匯款', '可回填帳號後五碼（選填）', '到貨後團主通知面交'] },
-    ship: { title: '賣貨便寄送', icon: '📦', steps: ['截單後在此頁看到應付金額（含運費 ${fee}）', '點頁面上的賣貨便連結', '購買「$1」商品，數量 = 應付金額，選取貨門市', '團主對帳後寄出，不用回填'] }
+    ship: { title: '賣貨便寄送', icon: '📦', steps: ['截單後在此頁看到應付金額（含運費 ${fee}）', '點頁面上的賣貨便連結', '購買「$1」商品，數量 = 應付金額扣掉運費（運費由賣貨便另收）', '選取貨門市，取貨時付款，不用回填'] }
   };
   var PROGRESS = ['已截單', '已付款', '已下單', '已到貨', '已取貨'];
 
@@ -225,7 +225,9 @@
     if (pay.method === 'ship') {
       h += '<b>📦 賣貨便</b><ol style="padding-left:18px;margin:6px 0">' +
         '<li>開啟賣場：' + (pay.link ? '<a class="ext" href="' + esc(pay.link) + '" target="_blank" rel="noopener">賣貨便連結 ↗</a>' : '（團主尚未提供）') + '</li>' +
-        '<li>商品「$1」購買 <b>' + b.total.toLocaleString() + '</b> 件</li><li>選擇取貨門市並完成下單</li></ol>';
+        '<li>商品「$1」購買 <b>' + (b.total - b.shipping).toLocaleString() + '</b> 件</li>' +
+        '<li>結帳時賣貨便會另收運費 ' + money(b.shipping) + '，合計 ' + money(b.total) + '</li>' +
+        '<li>選擇取貨門市並完成下單，取貨時付款</li></ol>';
     } else {
       h += '<b>🤝 面交・轉帳</b><p style="margin:6px 0">' + (pay.info ? esc(pay.info) : '（團主尚未提供轉帳資訊）') + '</p>';
     }
@@ -233,7 +235,7 @@
     if (b.paid) {
       h += '<p class="muted">團主已確認收款 ✓</p>';
     } else if (pay.method === 'ship') {
-      h += '<p class="muted">下單完成就好，不用回填；團主會在賣貨便後台用金額對帳。</p>';
+      h += '<p class="muted">下單完成就好，不用回填；團主會在賣貨便後台對帳。</p>';
     } else {
       h += '<p class="muted">轉帳後可回填帳號後五碼（選填），方便團主對帳。</p>' +
         '<input id="report" placeholder="轉帳帳號後五碼（選填）" value="' + esc(b.report || '') + '">' +
