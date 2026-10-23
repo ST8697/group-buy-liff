@@ -77,6 +77,8 @@ https://script.google.com/macros/s/AKfycbwGLeJDxOdIcXsGQJJqkffLjoBy01OXCTUDbollR
 
 ## 五、注意事項（踩過的坑）
 
+- **從 LINE 社群（OpenChat）開啟 LIFF 拿不到 ID token**（頁面顯示「請從 LINE 開啟點單頁」）。已改成拿不到時送 access token，後端用 `verifyAccessToken_` 驗證 client_id 再取個人資料；Apps Script 已發布版本 2
+
 - **修改 Apps Script 程式碼後一定要發布新版本**：部署 → 管理部署作業 → 編輯（鉛筆）→ 版本選「新版本」→ 部署，網址才不會變
 - `docs/pricing.js` 同時是 Apps Script 的 `Pricing.gs`，修改後兩邊都要更新
 - 修改 `docs/` 的 JS/CSS 後，把 `index.html` 裡的 `?v=` 版本號加 1，否則手機 LINE 會沿用快取（最多 10 分鐘）
