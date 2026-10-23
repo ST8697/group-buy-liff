@@ -45,7 +45,7 @@
 | 3. 部署網頁應用程式 | ✅ | 版本 1，執行身分「我」、存取權「所有人」。API 測試正常，GitHub Pages 跨網域呼叫也正常 |
 | 4. LINE Developers 建 LIFF | ✅ | Provider「團購」→ LINE Login channel「內衣團購點單」→ LIFF（Full、openid＋profile、Bot link Off），Channel 已 Published |
 | 5. 填 config.js 和試算表設定 | ✅ | `docs/config.js` 已上線；「設定」已填團名、截止時間、付款期限、轉帳資訊、LIFF 網址、Channel ID（API 已讀到 Channel ID）。賣貨便連結、團主 userId 待第 6、7 步 |
-| 6. 賣貨便 $1 賣場 | ✅ | 賣場已上架；網址待填進試算表 |
+| 6. 賣貨便 $1 賣場 | ✅ | 賣場已上架，網址已填進試算表 |
 | 7. 手機試點一筆＋設定團主 userId | ✅ | 手機 LINE 下測試單成功（內衣 12、內褲 1、面交），團主 userId 已填入「設定」 |
 
 **LINE 設定**
@@ -66,7 +66,7 @@ https://script.google.com/macros/s/AKfycbwGLeJDxOdIcXsGQJJqkffLjoBy01OXCTUDbollR
 
 ### 第 6 步：賣貨便 $1 賣場
 - ✅ 已建立隱藏賣場「內衣團購結帳 LINE社群專用」（GM2610238425106），商品「團購結帳」$1、庫存 9999；購物車填 3,000 件正常
-- ⬜ 賣場網址 https://myship.7-11.com.tw/general/detail/GM2610238425106 填到試算表「設定 → 賣貨便連結」（需登入 Google）
+- ✅ 賣場網址 https://myship.7-11.com.tw/general/detail/GM2610238425106 已填到試算表「設定 → 賣貨便連結」
 
 ### 正式開團前
 - ✅ 團主測試單已取消
