@@ -4,8 +4,8 @@
   var DEMO = !CONFIG.API_URL || params.has('demo');
 
   var FLOW = {
-    face: { title: '面交', icon: '🤝', steps: ['截單後在此頁看到應付金額', '依頁面上的轉帳資訊匯款', '回填轉帳帳號後五碼', '到貨後團主通知面交'] },
-    ship: { title: '賣貨便寄送', icon: '📦', steps: ['截單後在此頁看到應付金額（含運費 ${fee}）', '點頁面上的賣貨便連結', '購買「$1」商品，數量 = 應付金額，選取貨門市', '回填賣貨便訂單編號，到貨後寄出'] }
+    face: { title: '面交', icon: '🤝', steps: ['截單後在此頁看到應付金額', '依頁面上的轉帳資訊匯款', '可回填帳號後五碼（選填）', '到貨後團主通知面交'] },
+    ship: { title: '賣貨便寄送', icon: '📦', steps: ['截單後在此頁看到應付金額（含運費 ${fee}）', '點頁面上的賣貨便連結', '購買「$1」商品，數量 = 應付金額，選取貨門市', '團主對帳後寄出，不用回填'] }
   };
   var PROGRESS = ['已截單', '已付款', '已下單', '已到貨', '已取貨'];
 
@@ -230,10 +230,17 @@
       h += '<b>🤝 面交・轉帳</b><p style="margin:6px 0">' + (pay.info ? esc(pay.info) : '（團主尚未提供轉帳資訊）') + '</p>';
     }
     if (S.round.payDeadline) h += '<p class="muted">付款期限：' + esc(S.round.payDeadline) + '</p>';
-    h += '<input id="report" placeholder="' + (pay.method === 'ship' ? '賣貨便訂單編號' : '轉帳帳號後五碼') + '" value="' + esc(b.report || '') + '">' +
-      '<button class="pri" style="margin-top:8px" data-act="report"' + (busy ? ' disabled' : '') + '>' + (b.report ? '更新付款回報' : '回報付款') + '</button>' +
-      (b.report ? '<p class="muted">已回報：' + esc(b.report) + (b.paid ? '・團主已確認收款 ✓' : '・等待團主確認') + '</p>' : '') +
-      (err ? '<div class="err">' + esc(err) + '</div>' : '') + '</div>';
+    if (b.paid) {
+      h += '<p class="muted">團主已確認收款 ✓</p>';
+    } else if (pay.method === 'ship') {
+      h += '<p class="muted">下單完成就好，不用回填；團主會在賣貨便後台用金額對帳。</p>';
+    } else {
+      h += '<p class="muted">轉帳後可回填帳號後五碼（選填），方便團主對帳。</p>' +
+        '<input id="report" placeholder="轉帳帳號後五碼（選填）" value="' + esc(b.report || '') + '">' +
+        '<button class="pri" style="margin-top:8px" data-act="report"' + (busy ? ' disabled' : '') + '>' + (b.report ? '更新後五碼' : '回填後五碼') + '</button>' +
+        (b.report ? '<p class="muted">已回填：' + esc(b.report) + '・等待團主確認</p>' : '');
+    }
+    h += (err ? '<div class="err">' + esc(err) + '</div>' : '') + '</div>';
 
     if (S.lottery && S.lottery.length) {
       h += '<h2>🎁 抽獎結果</h2><div class="card pad">';
@@ -317,13 +324,13 @@
 
   function report() {
     var v = $('report').value.trim();
-    if (!v) { err = '請填寫付款資訊'; return renderSettled(); }
+    if (!v) { err = '請填寫帳號後五碼'; return renderSettled(); }
     busy = true; err = ''; renderSettled();
     api('report', { text: v }).then(function (res) {
       busy = false;
       if (!res.ok) return handleError(res.error);
       apply(res, false);
-      toast('已回報，等待團主確認');
+      toast('已回填，等待團主確認');
     });
   }
 
