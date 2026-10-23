@@ -104,7 +104,7 @@
   }
 
   function renderHeader() {
-    $('round-name').textContent = S.round.name || '內衣團購';
+    $('round-name').textContent = document.title = S.round.name || '內衣團購';
     var d = S.round.deadline ? new Date(S.round.deadline) : null;
     var cd = '';
     if (S.round.status === 'settled') cd = '已結算';

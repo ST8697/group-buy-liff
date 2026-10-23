@@ -20,13 +20,16 @@ test('拆單選最便宜的組合', () => {
   assert.throws(() => P.bestSplit(40));
 });
 
-test('即時預估：以補齊後件數計價，並提示更便宜的件數', () => {
+test('即時預估：以實際件數計價（零頭原價），並提示更便宜的件數', () => {
   const e = P.estimate(40);
   assert.strictEqual(e.filled, 42);
   assert.strictEqual(e.gap, 2);
-  assert.strictEqual(Math.round(e.unit), 326);
-  assert.deepStrictEqual([e.better.total, Math.round(e.better.unit)], [48, 317]);
-  assert.strictEqual(Math.round(P.estimate(3).unit), 383);
+  assert.strictEqual(Math.round(e.unit), 331);
+  assert.deepStrictEqual([e.better.total, Math.round(e.better.unit)], [42, 326]);
+  assert.strictEqual(P.estimate(8).unit, 402.5);   // 5 送 1 ＋ 2 件 $460
+  assert.strictEqual(P.estimate(3).unit, 460);
+  assert.strictEqual(P.estimate(0).unit, 460);
+  assert.strictEqual(Math.round(P.estimate(6).unit), 383);
   assert.strictEqual(P.estimate(36).gap, 0);
   assert.strictEqual(P.estimate(36).better, null);
   assert.strictEqual(P.estimate(0).gap, 6);

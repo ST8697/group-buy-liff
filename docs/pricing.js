@@ -55,22 +55,36 @@ var Pricing = (function () {
     return { cost: cost[total], orders: orders };
   }
 
+  /** 任意 n 件（不必是 6 的倍數）拆單後的最低總價；未湊滿 6 件的零頭以原價計 */
+  function minCost(n, s) {
+    s = cfg(s);
+    var cost = [0];
+    for (var x = 1; x <= n; x++) {
+      cost[x] = Infinity;
+      for (var k = 1; k <= Math.min(s.maxPerOrder, x); k++) {
+        var c = orderCost(k, s) + cost[x - k];
+        if (c < cost[x]) cost[x] = c;
+      }
+    }
+    return cost[n];
+  }
+
   /**
-   * 點單中即時預估。截單時團主會把件數補到 6 的倍數，
-   * 所以單價以「補齊後的件數」計算；better 是往上 30 件內第一個更便宜的件數。
+   * 點單中即時預估。單價以「目前實際件數」計算：還沒達到下一個門檻前，
+   * 多出來的件數以原價計（例如 8 件 = 5 送 1 ＋ 2 件原價 = 402.5）。
+   * filled/gap 是補到 6 的倍數還差幾件；better 是往上 30 件內第一個更便宜的 6 的倍數。
    */
   function estimate(total, s) {
     s = cfg(s);
     var g = groupSize(s);
     var filled = Math.max(g, Math.ceil(total / g) * g);
-    var cur = bestSplit(filled, s);
-    var unit = cur.cost / filled;
+    var unit = total > 0 ? minCost(total, s) / total : s.basePrice;
     var better = null;
-    for (var t = filled + g; t <= filled + 30; t += g) {
+    for (var t = Math.floor(total / g) * g + g; t <= total + 30; t += g) {
       var u = bestSplit(t, s).cost / t;
       if (Math.round(u) < Math.round(unit)) { better = { total: t, unit: u }; break; }
     }
-    return { total: total, filled: filled, gap: filled - total, unit: unit, orders: cur.orders, better: better };
+    return { total: total, filled: filled, gap: filled - total, unit: unit, orders: bestSplit(filled, s).orders, better: better };
   }
 
   /** 每人的內衣件數不可少於同款加購內褲件數 */
@@ -184,7 +198,7 @@ var Pricing = (function () {
   }
 
   return {
-    DEFAULTS: DEFAULTS, cfg: cfg, orderCost: orderCost, bestSplit: bestSplit, estimate: estimate,
+    DEFAULTS: DEFAULTS, cfg: cfg, orderCost: orderCost, bestSplit: bestSplit, minCost: minCost, estimate: estimate,
     validateItems: validateItems, drawLottery: drawLottery, assignOrders: assignOrders, settle: settle
   };
 })();
