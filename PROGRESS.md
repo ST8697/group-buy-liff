@@ -44,7 +44,7 @@
 | 匯入官網商品 | ✅ | 194 列（內衣 138、內褲 56），青春期款 6 列預設不開放。Google 伺服器抓官網**沒有被擋** |
 | 3. 部署網頁應用程式 | ✅ | 版本 1，執行身分「我」、存取權「所有人」。API 測試正常，GitHub Pages 跨網域呼叫也正常 |
 | 4. LINE Developers 建 LIFF | ✅ | Provider「團購」→ LINE Login channel「內衣團購點單」→ LIFF（Full、openid＋profile、Bot link Off），Channel 已 Published |
-| 5. 填 config.js 和試算表設定 | ⏳ | `docs/config.js` 已填；試算表「設定」待填 |
+| 5. 填 config.js 和試算表設定 | ✅ | `docs/config.js` 已上線；「設定」已填團名、截止時間、付款期限、轉帳資訊、LIFF 網址、Channel ID（API 已讀到 Channel ID）。賣貨便連結、團主 userId 待第 6、7 步 |
 | 6. 賣貨便 $1 賣場 | ⬜ | |
 | 7. 手機試點一筆＋設定團主 userId | ⬜ | |
 
