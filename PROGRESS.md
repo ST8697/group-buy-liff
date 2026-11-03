@@ -73,7 +73,7 @@ https://script.google.com/macros/s/AKfycbwGLeJDxOdIcXsGQJJqkffLjoBy01OXCTUDbollR
 - 把 LIFF 網址 https://liff.line.me/2012162599-VWFBR1hI 貼到 LINE 群組
 
 ### 待辦（非緊急）
-- Apps Script 的 `Pricing.gs` 還是舊版（點單頁單價改版前）。目前後端沒用到 `estimate`，所以結算不受影響；下次改 Apps Script 時順便把 `docs/pricing.js` 整份貼過去並發布新版本
+- ✅ 2026-11-03 已把 `Code.gs`、`Pricing.gs` 整份更新並發布 Apps Script 版本 3（新增「每件折抵」）。本團設定「每件折抵」= 16（官網購物金 $199/12 件），需重新按「截單並結算」才會套用
 
 ## 五、注意事項（踩過的坑）
 
