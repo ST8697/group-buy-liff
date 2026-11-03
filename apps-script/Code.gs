@@ -40,6 +40,7 @@ var SETTINGS = [
   ['內褲加購價', 109, ''],
   ['賣貨便運費', 38, ''],
   ['滿額贈', '999:滿額贈內褲,2500:手洗精隨行包', '每張訂單達門檻送的贈品，會拿來抽獎'],
+  ['每件折抵', 0, '官網購物金等額外折扣，結算時每件內衣再扣多少；新開一團會歸零'],
   ['最終單價', '', '結算後自動填入'],
   ['結算時間', '', '結算後自動填入']
 ];
@@ -105,6 +106,7 @@ function pricingCfg_(st) {
     tiers: st['團購級距'] ? list(st['團購級距'], function (a, b) { return { min: Number(a), price: Number(b) }; }) : undefined,
     pantyPrice: Number(st['內褲加購價']) || undefined,
     shippingFee: st['賣貨便運費'] === '' ? undefined : Number(st['賣貨便運費']),
+    discountPerBra: Number(st['每件折抵']) || 0,
     gifts: st['滿額贈'] ? list(st['滿額贈'], function (a, b) { return { min: Number(a), name: b }; }) : []
   });
 }
@@ -417,6 +419,7 @@ function menuSettle() {
     return;
   }
   var summary = '整團 ' + r.total + ' 件，拆成 ' + r.orders.length + ' 張訂單（' + r.orders.map(function (o) { return o.size; }).join('＋') + '）\n' +
+    (r.discount ? '官網原價平均每件 $' + (r.braCost / r.total).toFixed(2) + '，每件折抵 $' + r.discount + '\n' : '') +
     '每件內衣 $' + r.unit.toFixed(2) + '\n四捨五入差額：' + (r.roundingDiff >= 0 ? '多收 $' : '少收 $') + Math.abs(r.roundingDiff) + '\n' +
     '抽獎品項：' + (r.lottery.map(function (l) { return l.prize; }).join('、') || '無') + '\n\n確定結算並抽獎嗎？結算後團員就會看到應付金額。';
   if (ui.alert('截單並結算', summary, ui.ButtonSet.OK_CANCEL) !== ui.Button.OK) return;
@@ -467,7 +470,8 @@ function menuAnnounce() {
   if (st['狀態'] !== '已結算') { SpreadsheetApp.getUi().alert('請先執行「截單並結算」'); return; }
   var lot = readTable_(SHEETS.lottery);
   var text = '【' + st['團名'] + '】已截單！\n' +
-    '本團每件內衣 $' + Math.round(Number(st['最終單價'])) + '（加購內褲 $' + st['內褲加購價'] + '／件）\n\n' +
+    '本團每件內衣 $' + Math.round(Number(st['最終單價'])) + '（加購內褲 $' + st['內褲加購價'] + '／件）\n' +
+    (Number(st['每件折抵']) ? '已扣官網購物金折抵每件 $' + Number(st['每件折抵']) + '\n' : '') + '\n' +
     '請打開點單頁查看自己的明細、應付金額與付款方式：\n' + (st['LIFF 網址'] || '（請在設定填 LIFF 網址）') + '\n' +
     (st['付款期限'] ? '付款期限：' + st['付款期限'] + '\n' : '') +
     (lot.length ? '\n🎁 抽獎結果\n' + lot.map(function (l) { return '・' + l['獎品'] + ' → ' + l['得獎者']; }).join('\n') + '\n' : '') +
@@ -510,6 +514,7 @@ function menuNewRound() {
   writeTable_(SHEETS.lottery, []);
   sheet_(SHEETS.orders).clear();
   ['最終單價', '結算時間', '進度', '截止時間', '付款期限'].forEach(function (k) { setSetting_(k, ''); });
+  setSetting_('每件折抵', 0);
   setSetting_('狀態', '開放點單');
   ui.alert('已封存。請到「設定」更新團名與截止時間，再執行「匯入官網商品」。點單連結不用換。');
 }

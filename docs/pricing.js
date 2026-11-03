@@ -12,6 +12,7 @@ var Pricing = (function () {
     tiers: [{ min: 10, price: 400 }, { min: 30, price: 380 }],
     pantyPrice: 109,
     shippingFee: 38,
+    discountPerBra: 0,       // 額外折抵（例如官網購物金），結算時每件內衣再扣
     gifts: [{ min: 999, name: '滿額贈內褲' }, { min: 2500, name: '手洗精隨行包' }]
   };
 
@@ -177,7 +178,9 @@ var Pricing = (function () {
     if (total === 0) return { ok: false, total: 0, need: g, message: '目前沒有任何訂單' };
     if (total % g !== 0) return { ok: false, total: total, need: g - total % g, message: '總件數 ' + total + ' 件，需再補 ' + (g - total % g) + ' 件才是 ' + g + ' 的倍數' };
     var split = bestSplit(total, s);
-    var unit = split.cost / total;
+    var discount = Math.max(0, Number(s.discountPerBra) || 0);
+    var unit = Math.max(0, split.cost / total - discount);
+    var target = Math.round(unit * total);
     var collected = 0;
     list.forEach(function (m) {
       m.braAmount = Math.round(m.bras * unit);
@@ -191,8 +194,8 @@ var Pricing = (function () {
     orders.forEach(function (o) { prizes = prizes.concat(o.gifts); });
     var lottery = drawLottery(list.map(function (m) { return { userId: m.userId, name: m.name, count: m.bras }; }), prizes, rng);
     return {
-      ok: true, total: total, unit: unit, braCost: split.cost,
-      roundingDiff: collected - split.cost,
+      ok: true, total: total, unit: unit, braCost: split.cost, discount: discount,
+      roundingDiff: collected - target,
       members: list, orders: orders, lottery: lottery
     };
   }

@@ -101,3 +101,14 @@ test('抽獎依件數加權', () => {
   assert.strictEqual(P.drawLottery(t, ['x'], () => 0.05)[0].winner, 'A');
   assert.strictEqual(P.drawLottery(t, ['x'], () => 0.5)[0].winner, 'B');
 });
+
+test('結算：每件折抵會從平均單價扣掉', () => {
+  const { members, items } = sample();
+  const r = P.settle(members, items, { discountPerBra: 16 }, () => 0);
+  assert.ok(r.ok);
+  assert.strictEqual(r.discount, 16);
+  assert.strictEqual(r.unit, 11400 / 36 - 16);
+  const amy = r.members.find(m => m.userId === 'u2');
+  assert.strictEqual(amy.braAmount, Math.round(10 * (11400 / 36 - 16)));
+  assert.strictEqual(amy.total, amy.braAmount + amy.pantyAmount + 38);
+});
