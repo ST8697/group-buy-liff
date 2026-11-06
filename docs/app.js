@@ -222,7 +222,8 @@
     (S.me.items || []).forEach(function (it) {
       h += '<div class="row"><span>' + esc(it.type === 'bra' ? productName(it.key) : '內褲') + '・' + esc(it.variant) + '</span><span>× ' + it.qty + '</span></div>';
     });
-    h += '<div class="row"><span>內衣 ' + b.bras + ' × ' + money(S.round.unit) + '</span><span>' + money(b.braAmount) + '</span></div>';
+    var unitText = S.round.unit % 1 ? '$' + S.round.unit.toFixed(2) : money(S.round.unit);
+    h += '<div class="row"><span>內衣 ' + b.bras + ' × ' + unitText + '</span><span>' + money(b.braAmount) + '</span></div>';
     if (S.pricing.discountPerBra) h += '<div class="sub">單價已扣官網購物金折抵 ' + money(S.pricing.discountPerBra) + '／件</div>';
     if (b.panties) h += '<div class="row"><span>內褲 ' + b.panties + ' × ' + money(S.pricing.pantyPrice) + '</span><span>' + money(b.pantyAmount) + '</span></div>';
     if (b.shipping) h += '<div class="row"><span>賣貨便運費</span><span>' + money(b.shipping) + '</span></div>';
